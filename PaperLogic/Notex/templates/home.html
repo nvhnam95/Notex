@@ -1,0 +1,9 @@
+<script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/2.2.0/anime.min.js"></script>
+
+{% if user.is_authenticated %}
+<p>Hello, {{ user.username }}<br><br>
+This is your notes: ...</p>
+<a href = "/logout">Logout</a>
+{% else %}
+<meta http-equiv="REFRESH" content="0;url=login">
+{% endif %}
