@@ -1,35 +1,108 @@
-<script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/2.2.0/anime.min.js"></script>
-
-<!-- <meta http-equiv="REFRESH" content="0;url=login">
-<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-	 width="612px" height="792px" viewBox="0 0 612 792" enable-background="new 0 0 612 792" xml:space="preserve">
-<rect x="264.108" y="181.108" transform="matrix(0.9681 0.2506 -0.2506 0.9681 102.5355 -63.1624)" fill="#BE1E2D" width="70.27" height="379.73"/>
-<polygon fill="#00A651" points="209.771,577.568 217.641,545.971 285.668,563.584 278.081,590.403 252.333,613.667 226.333,637 
-    215,599.5 "/>
--->
-
-<html>
-<head>
-    <title>Notex</title>
-</head>
-<body>
-    {% if user.is_authenticated %}
-    <p>Hello, {{ user.username }}<br><br>
-    <a href ="/logout">Logout</a>
-    {% else %}
-    <p>Login</p>
-    <form method="POST" id = "form1" action="/login/" >
-        {% csrf_token %} {{ login_form.as_p }}
-        <button type="submit">Login</button>
-    </form>
-
-    <form method="POST" action="/register/">
-        {% csrf_token %} 
-        {{ register_form.as_p }}
-        <button type="submit">Register</button>
-    </form>
-    {% endif %}
+{% extends "base.html" %} {% load static %} {% block content %}
+<!-- <img id="pencil" src="{% static 'pencil.png' %}" alt="Just a pencil" height="100" width="100" />  -->
+{% if user.is_authenticated %}
+<p>Hello, {{ user.username }}
+    <br> {% for note in notes %}
+    <li class="text-info">{{ note.content }}</li>
+    {% endfor %}
+    <br>
+    <a href="/logout">Logout</a>
+    {% else %} 
     
-</svg>
-</body>
-</html>
+    <div id="loginform" class="anime_object form-group">
+        <h4 class="text-muted">Login</h4>
+        <form method="POST" id="form1" action="/login/">
+            {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                <p class="text-info">{{ message }}</p>
+                    {% endfor %}
+            </ul>
+            {% endif %}
+            {% csrf_token %} {{ login_form.as_p }}
+            
+            <button type="submit" class="btn btn-default">Login</button>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <a id ="register_btn" href ="#" >Register</a>
+        </form>
+    </div>
+ 
+    <div id="registerform" class="anime_object form-group">
+
+            <h4 class="text-muted">Register</h4>
+        <form method="POST" action="/register/" class = "form">
+            {% csrf_token %} {{ register_form.as_p }}
+            <a id ="back_btn" href ="#" class ="btn" >Back</a>
+            <button type="submit" class="btn btn-default">Register</button>
+        </form>
+    </div>
+    {% endif %}
+    <style>
+        
+        .form{
+            background-color: rgba(255,255,255,0.1)
+        }
+        /* body {
+            background-image: url("{% static 'background.jpg' %}");
+            background-repeat: no-repeat;
+            background-size: cover;
+        } */
+        .anime_object {
+            position: absolute;
+            left:15%;
+            top:20%;
+            display: none;
+            
+        }
+
+        label {
+            font-family: Verdana;
+            font-size: 14px;
+            color: #555555;
+            line-height: 1.5;
+            letter-spacing: .25px;
+        }
+    </style>
+    <script>
+        window.onload = function () {
+            var relativeOffset = anime.timeline();
+            {% if first_login %}
+            relativeOffset
+                .add({
+                    targets: '#pencil',
+                    translateX: 500,
+                    easing: 'easeOutExpo',
+                    rotate: '1turn'
+                })
+                
+                {% endif %}
+        /*    console.log("ready!");
+                .add({
+                    targets: '#loginform',
+                    translateX: 800,
+                    easing: 'easeOutExpo',
+                    offset: '600' // Starts 600ms before the previous animation ends
+                })
+                .add({
+                    targets: '#registerform',
+                    translateX: 1200,
+
+                    easing: 'easeOutExpo',
+                    offset: '-=800' // Starts 800ms before the previous animation ends
+                });
+                */
+
+                $("#loginform").delay(400).slideDown(600);
+                $("#register_btn").on("click", function(){
+                    $("#loginform").slideUp(300).delay(300);
+                    $("#registerform").delay(500).slideDown(300);
+                });
+                
+                $("#back_btn").on("click", function(){
+                    $("#registerform").slideUp(300).delay(300);
+                    $("#loginform").delay(500).slideDown(300);
+                });
+        }
+
+    </script> 
+{% endblock content %}
