@@ -58,7 +58,10 @@ def register(request):
         else:
             login_form = LoginForm()
             register_form = RegisterForm(request.POST)
-            return render(request, 'home.html', {'login_form' : login_form, 'register_form' : register_form})
-
+            register_error = False
+            if register_form.errors:
+                print (register_form.errors)
+                register_error = True
+            return render(request, 'home.html', {'login_form' : login_form, 'register_form' : register_form, 'register_error':register_error})
     else:
         return HttpResponseRedirect('/')

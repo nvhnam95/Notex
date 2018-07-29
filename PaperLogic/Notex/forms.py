@@ -59,4 +59,10 @@ class RegisterForm(forms.Form):
 
         if " " in password or " " in username:
             raise forms.ValidationError("Username and password cannot contain space.")
+
+        if len(password) < 6:
+            raise forms.ValidationError("Your password is too short.")
+
+        if len(username) < 6:
+            raise forms.ValidationError("Your username is too short.")
   

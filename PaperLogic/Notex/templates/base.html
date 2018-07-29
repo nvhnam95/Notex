@@ -1,35 +1,38 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/2.2.0/anime.min.js"></script>
-        
-        <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
-        <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" rel="stylesheet" type="text/css" media="all">
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.bundle.min.js"></script>
-    
-        <title>Notex</title>
-        <style>
-        #logo{
-            position: absolute;
-            top:0%;
-            left:0%
-        }
-        .header {
-            background-color: #19444c;
-            text-align: center;
-            padding:35px;
-            top: -0%
-        }
-        </style>
-    </head>
-    <body>
-            <div class="header">
-                    <h1></h1>
-            </div>
-        {% load static %}
-        <a id="logo" href =""><img id = "logo" src="{% static 'logo.svg' %}"/></a>
-    {% block content %}
-    {% endblock content %}
-    </body>
+<head>
+    {% load static %}
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" rel="stylesheet" type="text/css" media="all">
+    <script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
+
+    <link rel="shortcut icon" href="{% static 'weblogo.PNG' type='image/x-icon' %}">
+    <link href="{% static 'notex-styles.css'%}" rel="stylesheet" type="text/css" media="all">
+    <script src="{% static 'notex-main.js'%}"></script>
+
+    <title>Notex - Pin your ideas</title>
+</head>
+
+<body>
+    <script>
+       // {%if register_error %}
+        show_register_form = true
+       // {%else%}
+        show_register_form = false
+       // {% endif %}
+    </script>
+    <div class="header">
+        <h1></h1>
+    </div>
+    <a id="logo" href="">
+        <img id="logo" width="120" height="40" src="{% static 'logo.png' %}" />
+    </a>
+    {% if user.is_authenticated %}
+    <span id="menu">
+        <spam>Hello, {{ user.username }}</spam>
+        <a href="/logout">Logout</a>
+    </span>
+
+    {%endif%} {% block content %} {% endblock content %}
+</body>
 </html>
