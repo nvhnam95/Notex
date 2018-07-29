@@ -1,23 +1,26 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     {% load static %}
-    <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+    <title>Notex - Pin your ideas</title>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" rel="stylesheet" type="text/css" media="all">
     <script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/2.2.0/anime.js"></script>
 
-    <link rel="shortcut icon" href="{% static 'weblogo.PNG' type='image/x-icon' %}">
+    <link rel="shortcut icon" href="{% static 'favicon.png' type='image/x-icon' %}">
     <link href="{% static 'notex-styles.css'%}" rel="stylesheet" type="text/css" media="all">
     <script src="{% static 'notex-main.js'%}"></script>
 
-    <title>Notex - Pin your ideas</title>
 </head>
 
 <body>
     <script>
-       // {%if register_error %}
+        // {%if register_error %}
         show_register_form = true
-       // {%else%}
+        // {%else%}
         show_register_form = false
        // {% endif %}
     </script>
@@ -25,14 +28,22 @@
         <h1></h1>
     </div>
     <a id="logo" href="">
-        <img id="logo" width="120" height="40" src="{% static 'logo.png' %}" />
+        <img id="logoNote" width="120" height="40" src="{% static 'logoNote.png' %}" />
+        <img id="logoX" width="50" height="50" src="{% static 'logoX.png' %}" />
     </a>
     {% if user.is_authenticated %}
+    <div id="create_note_container">
+        <textarea id="input_new_note" class="form-control" placeholder="Create note" cols="92" rows="15"></textarea >
+            <button id="create_note" class="btn">Create</button>
+    </div>
+    <div id="messages" class="text-success"></div>
     <span id="menu">
-        <spam>Hello, {{ user.username }}</spam>
-        <a href="/logout">Logout</a>
+        <img id="menu-btn" width="40" height="40" src="{% static 'menu-btn.png' %}"/>
+        <div id="menu-container">
+            <div id="user_name"> {{ user.username }}</div>
+            <a id="logout-btn" href="/logout"><p class="text-info">Logout</p></a>
+        </div>
     </span>
-
     {%endif%} {% block content %} {% endblock content %}
 </body>
 </html>

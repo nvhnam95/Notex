@@ -1,10 +1,26 @@
 {% extends "base.html" %} {% load static %} {% block content %}
+
+
 {% if user.is_authenticated %}
+<div id="blanket"></div>
+
     <div class="grid">
         {% for note in notes %}
-        <div class="note">
-            <div><p class = "text-muted"> {{ note.content }}</p></div>
-            <div>Menu items</div>
+        <div class="note" note-id="{{ note.id }}">
+            <div>
+                <p class="note-content" > 
+                    {{ note.content }}
+                </p>
+            </div>
+            <div class="note-date">
+                <span><h6><small>{{ note.created_date}}</small></h6></span>
+            </div>
+            <div class="note-menu">
+
+                <span  class="btn note_action save">Save</span>
+                <span  class="btn note_action delete">Delete</span>
+                <span  class="btn note_action color">Color</span>
+            </div>
         </div>
         {% endfor %}
     </div>

@@ -9,4 +9,10 @@ urlpatterns = [
     path('login/', views.log_in),
     path('logout/', views.log_out),
     path('register/', views.register),
-]+ static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+
+    path('api/updatenote', views.update_note),
+    path('api/deletenote', views.delete_note),    
+    path('api/createnote', views.create_note),
+
+
+]
