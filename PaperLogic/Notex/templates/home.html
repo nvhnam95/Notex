@@ -3,28 +3,39 @@
 
 {% if user.is_authenticated %}
 <div id="blanket"></div>
-
     <div class="grid">
+        {% if notes %}
         {% for note in notes %}
-        <div class="note" note-id="{{ note.id }}">
-            <div>
-                <p class="note-content" > 
-                    {{ note.content }}
-                </p>
-            </div>
-            <div class="note-date">
-                <span><h6><small>{{ note.created_date}}</small></h6></span>
-            </div>
-            <div class="note-menu">
+        <div class="note" {% if note.background %} background= {{ note.background}} {% endif %} note-id="{{ note.id }}">
+                <div>
+                    <p class="note-content">{{ note.content }}</p>
+                </div>
 
+                <div class="note-date">
+                    <span><h6><small>{{ note.created_date}}</small></h6></span>
+                </div>
+            
+                <div class="note-menu">
+                
                 <span  class="btn note_action save">Save</span>
                 <span  class="btn note_action delete">Delete</span>
-                <span  class="btn note_action color">Color</span>
+                <span>
+                    <input readonly placeholder = "Color" class="btn note_action color colorPicker" type="text" name="color1" {% if note.background %} value= "{{note.background}}" {% endif %}/>
+                </span>
+                </div>
             </div>
+            {% endfor %}
         </div>
-        {% endfor %}
-    </div>
     {% else %}
+    <div class="instruction-cover">
+        <p class="instruction no-note">
+            Hello, create your first note here
+            <img id="up-arrow" width="50" height="100" src="{% static 'up-arrow.png' %}" />
+        </p>
+    </div>
+    {% endif %}
+
+{% else %}
 
     <div id="loginform" class="anime_object form-group">
         <h4 class="text-muted">Login</h4>

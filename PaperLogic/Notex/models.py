@@ -6,4 +6,5 @@ class Note(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL,
                              on_delete=models.CASCADE,)
     content = models.TextField()
+    background = models.TextField(blank=True)
     created_date = models.DateTimeField('created date')

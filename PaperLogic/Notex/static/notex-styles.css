@@ -2,7 +2,7 @@
     margin-top: 5px;
     position: absolute;
     top: 10px;
-    right: 10px
+    right: 5px
 }
 
 #logo {
@@ -111,9 +111,11 @@ z-index:1
 
 .note:hover > .note-menu{
     visibility: visible;
+
 }
 
 .note-menu{
+    display:flex;
     visibility: hidden;
     float: right;
 }
@@ -153,8 +155,13 @@ z-index:1
     left: 59%;
     right: 16%;
 }
+.create_note_actions{
+    display:flex;
+    float: right;
+}
 
 #input_new_note{
+    opacity:1;
     width: 100%;
     height: 40px;
     top: 3%;
@@ -168,10 +175,31 @@ z-index:1
     background-color: rgba(255,255,255,0.1);
 }
 
-#create_note{
+.create_note_actions_container{
     display: none;
     margin-top:5px;
-    float: right;
     right: 30%;
 }
 
+/* .instruction-cover{
+    position:fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 100%; 
+    height: 100vh; 
+} */
+
+.no-note{
+    font-size: 30px;
+    position: absolute;
+    top: 60px;
+    right:40%;
+
+}
+.no-note #up-arrow{
+    position: absolute;
+    top:-60px;
+    right:-15%;
+
+}

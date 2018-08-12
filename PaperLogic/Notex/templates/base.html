@@ -6,9 +6,13 @@
     <title>Notex - Pin your ideas</title>
 
     <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" rel="stylesheet" type="text/css" media="all">
     <script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/2.2.0/anime.js"></script>
+
+    <script src="{% static 'colorPicker-min.js' %}"></script>
+    <link href="{% static 'colorPicker.css'%}" rel="stylesheet" type="text/css" media="all">
 
     <link rel="shortcut icon" href="{% static 'favicon.png' type='image/x-icon' %}">
     <link href="{% static 'notex-styles.css'%}" rel="stylesheet" type="text/css" media="all">
@@ -23,6 +27,7 @@
         // {%else%}
         show_register_form = false
        // {% endif %}
+       color_picker_background = "{% static 'color-btn.png'%}"
     </script>
     <div class="header">
         <h1></h1>
@@ -34,15 +39,16 @@
     {% if user.is_authenticated %}
     <div id="create_note_container">
         <textarea id="input_new_note" class="form-control" placeholder="Create note" cols="92" rows="15"></textarea >
-            <button id="create_note" class="btn">Create</button>
+            <span class="create_note_actions_container">
+                <span class="create_note_actions">
+                    <input id ="create_note_color" readonly class="btn create_menu colorPicker" type="text" name="color1" value="#FFFFFF"/>
+                    <button id="create_note" class="btn">Create</button>
+                </span>
+            </span>
     </div>
     <div id="messages" class="text-success"></div>
     <span id="menu">
-        <img id="menu-btn" width="40" height="40" src="{% static 'menu-btn.png' %}"/>
-        <div id="menu-container">
-            <div id="user_name"> {{ user.username }}</div>
-            <a id="logout-btn" href="/logout"><p class="text-info">Logout</p></a>
-        </div>
+        <a  href="/logout"  > <img alt="Logout" id="menu-btn" width="40" height="40" src="{% static 'menu-btn.png' %}"/></a>
     </span>
     {%endif%} {% block content %} {% endblock content %}
 </body>

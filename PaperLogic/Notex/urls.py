@@ -13,6 +13,4 @@ urlpatterns = [
     path('api/updatenote', views.update_note),
     path('api/deletenote', views.delete_note),    
     path('api/createnote', views.create_note),
-
-
 ]

@@ -69,6 +69,7 @@ def update_note(request):
     note = Note.objects.get(id=request.POST.get("id"))
     note.content = request.POST.get("content")
     note.created_date =  request.POST.get("date")
+    note.background = request.POST.get("background")
     note.save()
     return HttpResponse(content_type="application/json")
 
@@ -82,6 +83,7 @@ def create_note(request):
     note = Note()
     note.user = request.user
     note.content = request.POST.get("content")
+    note.background = request.POST.get("background")
     note.created_date =  request.POST.get("date")
     note.save()
     id = note.id

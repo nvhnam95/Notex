@@ -8,6 +8,7 @@ $(function () {
     
     //Form listeners: note content, save btn, delete btn
     add_notes_listener()
+    
 
     //Rotate logo
     logoX = anime({
@@ -29,15 +30,13 @@ $(function () {
 
     //Generate random color for each note
     $(".note").each(function () {
+        background = $(this).attr("background")
         $(this).css({
-            "background-color": "rgba(" +
-                Math.floor((Math.random() * 150) + 100) + "," +
-                Math.floor((Math.random() * 150) + 100) + "," +
-                Math.floor((Math.random() * 150) + 100) + ")",
-            "opacity": "0.7"
+            "opacity": "0.7",
+            "background-color": background
         })
     });
-
+    reset_notes_states()
     //Listerners
     $(".grid").resize(function(){
         notice("Look like you have no note now.")
@@ -54,25 +53,27 @@ $(function () {
         blanket.css("display", "none");
         reset_notes_states();
     });
-
+   
     //Click on Create note button
     $("#create_note").on("click", function () {
         raw_note={}
-        raw_note.content = $(this).parent().find("textarea").val()
+        raw_note.content = $("#input_new_note").val()
         if(!raw_note.content){
             notice("You have to write something.");
             reset_notes_states()
             return;
         }
         create_note(raw_note);
-        $(this).parent().find("textarea").val("");
+
+        $("#input_new_note").val("");
         reset_notes_states()
     });
     
     //Click on create note text area
     $("#input_new_note").on("click", function () {
         $(this).css("height","300")
-        $("#create_note").show()
+        $(".create_note_actions_container").show()
+        if ($(".instruction-cover")){$(".instruction-cover").fadeOut(500)}
     });
     //Forms on login screen
     $("#register_btn").on("click", function () {
@@ -85,8 +86,9 @@ $(function () {
         $("#loginform").delay(500).slideDown(300);
     });
 
+    
     function reset_notes_states() {
-
+        
         //Send to back, make tranparent
         $(".note").each(function () {
             note = $(this);
@@ -100,25 +102,49 @@ $(function () {
             })
             note.find("div p").attr("contenteditable", "false")
         });
-
+        
         //Input new note text area
-        $("#create_note").hide()
+        $(".create_note_actions_container").hide()
         $("#input_new_note").css("height","40px")
         $("#input_new_note").parent().css("z-index","0");
-
+        
+        //Color picker style
+        $(".colorPicker").each(function () {
+            //If not set style yet
+            if ($(this).parent().find(".colorPicker-picker").length==0){
+                $(this).colorPicker({showHexField: false, colors: ["ff5e5e", "ffd15e","79ff5e","60ffd4","5e9bff","975bff","f45bff","ff5b9d","96ffe8","ffda96", "efa492","a7a0f7"]});
+            }        
+        });
+        //Change its background
+        $(".colorPicker-picker").each(function () {
+            $(this).css("background-image", "url("+color_picker_background+")");
+        });
+        
         add_notes_listener()
-
+        add_color_picker_listener()
         //Hide blanket
         $("#blanket").hide()
         //Rearrange
         $grid.masonry()
     }
+    
+        function add_color_picker_listener(){
+            $(".note_action.colorPicker").unbind()
+            $(".note_action.colorPicker").change(function() {
+                $(this).parent().parent().parent().css("background-color",$(this).val())
+                update_note($(this).parent().parent().parent())
+            });
+            $( ".create_menu.colorPicker" ).change(function() {
+                $(this).parent().parent().parent().find("#input_new_note").css({"background-color":$(this).val()})
+            });
+        }
 
     function update_note(note) {
         data = {};
         data.csrfmiddlewaretoken = CsrfToken();
         data.id = note.attr("note-id");
         data.content = note.find("div p").text();
+        data.background = note.find(".note-menu .colorPicker").val()
         data.date = (new Date()).toISOString().replace("T", " ");
         loading(true);
         $.ajax({
@@ -161,8 +187,10 @@ $(function () {
         data = {};
         data.csrfmiddlewaretoken = CsrfToken();
         data.content = raw_note.content;
+        data.background = $("#input_new_note").parent().find(".create_note_actions_container .create_note_actions #create_note_color").val()
         data.date = (new Date()).toISOString().replace("T", " ");
         note_date = data.date
+        note_background = data.background
 
         loading(true);
         $.ajax({
@@ -172,10 +200,11 @@ $(function () {
             data: data
         }).done(function (data) {
             loading(false);
-            new_note = '<div class="note" note-id="'+data+'"><div><p class="note-content">'+raw_note.content+'</p> </div> <div class="note-date"> <span><h6><small>'+note_date+'</small></h6></span> </div> <div class="note-menu"> <span class="btn note_action save">Save</span> <span class="btn note_action delete">Delete</span> <span class="btn note_action color">Color</span> </div> </div>'
+            new_note = '<div class="note" style="background-color: '+note_background+'" note-id="'+data+'"><div><p class="note-content">'+raw_note.content+'</p> </div> <div class="note-date"> <span><h6><small>'+note_date+'</small></h6></span> </div> <div class="note-menu"> <span class="btn note_action save">Save</span> <span class="btn note_action delete">Delete</span> <span> <input readonly placeholder = "Color" class="btn note_action color colorPicker" type="text" name="color1" value="#333399"/> </span> </div> </div>'
             elem = $.parseHTML(new_note)
 
             $grid.masonry().prepend(elem).masonry( 'appended', elem ).masonry();
+
             reset_notes_states()
             notice("Note created.")
         }).fail(function (data) {
@@ -213,6 +242,8 @@ $(function () {
     function add_notes_listener(){
     //When click on note's content
     $(".note-content").unbind()
+
+
         $(".note-content").on("click", function (e) {
             note = $(this).parent().parent();
             note.find("div p").attr("contenteditable", "true")
@@ -248,7 +279,8 @@ $(function () {
     function notice(message){
         $("#messages").hide()
         $("#messages").html(message)
-        $("#messages").show().fadeOut(3000);
+        $("#messages").show().fadeOut(3000)
+
     }
 
     CsrfToken = function () {
