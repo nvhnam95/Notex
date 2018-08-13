@@ -85,7 +85,7 @@ label {
 #menu-btn{
     position: absolute;
     left: -150px;
-    top:8%;
+    top:15px;
     
 }
 
@@ -202,4 +202,8 @@ z-index:1
     top:-60px;
     right:-15%;
 
+}
+
+.more{
+    display:none;
 }

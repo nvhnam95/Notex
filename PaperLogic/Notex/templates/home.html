@@ -1,5 +1,6 @@
 {% extends "base.html" %} {% load static %} {% block content %}
 
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 
 {% if user.is_authenticated %}
 <div id="blanket"></div>
@@ -7,8 +8,8 @@
         {% if notes %}
         {% for note in notes %}
         <div class="note" {% if note.background %} background= {{ note.background}} {% endif %} note-id="{{ note.id }}">
-                <div>
-                    <p class="note-content">{{ note.content }}</p>
+                <div class="note-content">
+                     {{ note.content }}
                 </div>
 
                 <div class="note-date">

@@ -32,7 +32,7 @@ $(function () {
     $(".note").each(function () {
         background = $(this).attr("background")
         $(this).css({
-            "opacity": "0.7",
+            "opacity": "1",
             "background-color": background
         })
     });
@@ -57,7 +57,7 @@ $(function () {
     //Click on Create note button
     $("#create_note").on("click", function () {
         raw_note={}
-        raw_note.content = $("#input_new_note").val()
+        raw_note.content = $("#input_new_note").val().replace(/(?:\r\n|\r|\n)/g, '<br>').trim();
         if(!raw_note.content){
             notice("You have to write something.");
             reset_notes_states()
@@ -87,6 +87,7 @@ $(function () {
     });
 
     
+
     function reset_notes_states() {
         
         //Send to back, make tranparent
@@ -97,7 +98,7 @@ $(function () {
             note.find("div span.color").show();
             note.css({
                 "z-index": 0,
-                "opacity": "0.7",
+                "opacity": "1",
                 "position": "absolute"
             })
             note.find("div p").attr("contenteditable", "false")
@@ -119,7 +120,8 @@ $(function () {
         $(".colorPicker-picker").each(function () {
             $(this).css("background-image", "url("+color_picker_background+")");
         });
-        
+        //Format notes
+        format_notes()
         add_notes_listener()
         add_color_picker_listener()
         //Hide blanket
@@ -127,23 +129,47 @@ $(function () {
         //Rearrange
         $grid.masonry()
     }
-    
-        function add_color_picker_listener(){
-            $(".note_action.colorPicker").unbind()
-            $(".note_action.colorPicker").change(function() {
-                $(this).parent().parent().parent().css("background-color",$(this).val())
-                update_note($(this).parent().parent().parent())
-            });
-            $( ".create_menu.colorPicker" ).change(function() {
-                $(this).parent().parent().parent().find("#input_new_note").css({"background-color":$(this).val()})
-            });
-        }
+
+    function format_notes(){
+        //Trim long notes
+        $(".note").each(function(){
+            content = $(this).find(".note-content").html()
+
+            content = content.trim()
+            content = content.replace(/&lt;br&gt;/g,"<br/>")
+            content = content.replace(/&lt;div&gt;/g,"<br/>")
+            content = content.replace(/&lt;\/div&gt;/g,"")
+            content = content.replace(/&nbsp;/g,"")
+            content = content.replace(/(?:\r\n|\r|\n)/g, '<br>')
+            content = content.replace(/:br:/g, '<br>')
+
+            
+            $(this).find(".note-content").html(content)
+            })
+    }
+
+    function add_color_picker_listener(){
+        $(".note_action.colorPicker").unbind()
+        $(".note_action.colorPicker").change(function() {
+            $(this).parent().parent().parent().css("background-color",$(this).val())
+            update_note($(this).parent().parent().parent())
+        });
+        $( ".create_menu.colorPicker" ).change(function() {
+            $(this).parent().parent().parent().find("#input_new_note").css({"background-color":$(this).val()})
+        });
+    }
 
     function update_note(note) {
         data = {};
         data.csrfmiddlewaretoken = CsrfToken();
         data.id = note.attr("note-id");
-        data.content = note.find("div p").text();
+        html = note.find(".note-content").html()
+        console.log(html)
+        note.find(".note-content").html(html.replace(/<div>/g,":br:"))
+        note.find(".note-content").html(note.find(".note-content").html().replace(/<br>/g,":br:"))
+        console.log(note.find(".note-content").text())
+        data.content = note.find(".note-content").text();
+        note.find(".note-content").html(html)
         data.background = note.find(".note-menu .colorPicker").val()
         data.date = (new Date()).toISOString().replace("T", " ");
         loading(true);
@@ -245,8 +271,8 @@ $(function () {
 
 
         $(".note-content").on("click", function (e) {
-            note = $(this).parent().parent();
-            note.find("div p").attr("contenteditable", "true")
+            note = $(this).parent();
+            $(this).attr("contenteditable", "true")
             note.css({ "z-index": "2", "position": "fixed" });
             note.animate({
                 top: "20%",
