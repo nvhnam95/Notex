@@ -31,6 +31,7 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 INSTALLED_APPS = [
+    'Notex.apps.NotexConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -75,11 +76,12 @@ WSGI_APPLICATION = 'PaperLogic.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'paul.nguyen',
-        'USER': 'paul.nguyen',
+        #'ENGINE': 'django.db.backends.postgresql',
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        #'USER': 'notex',
         'PASSWORD': 'hainam123',
-        'HOST': '127.0.0.1',
+        'HOST': '54.208.18.7',
         'PORT': '5432',
     }
 }

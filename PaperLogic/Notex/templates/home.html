@@ -1,0 +1,66 @@
+{% extends "base.html" %} {% load static %} {% block content %}
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+{% if user.is_authenticated %}
+<div id="blanket"></div>
+    <div class="grid">
+        {% if notes %}
+        {% for note in notes %}
+        <div class="note" {% if note.background %} background= {{ note.background}} {% endif %} note-id="{{ note.id }}">
+                <div class="note-content">
+                     {{ note.content }}
+                </div>
+
+                <div class="note-date">
+                    <span><h6><small>{{ note.created_date}}</small></h6></span>
+                </div>
+            
+                <div class="note-menu">
+                
+                <span  class="btn note_action save">Save</span>
+                <span  class="btn note_action delete">Delete</span>
+                <span>
+                    <input readonly placeholder = "Color" class="btn note_action color colorPicker" type="text" name="color1" {% if note.background %} value= "{{note.background}}" {% endif %}/>
+                </span>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    {% else %}
+    <div class="instruction-cover">
+        <p class="instruction no-note">
+            Hello, create your first note here
+            <img id="up-arrow" width="50" height="100" src="{% static 'up-arrow.png' %}" />
+        </p>
+    </div>
+    {% endif %}
+
+{% else %}
+
+    <div id="loginform" class="anime_object form-group">
+        <h4 class="text-muted">Login</h4>
+        <form method="POST" id="form1" action="/login/">
+            {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                <p class="text-info">{{ message }}</p>
+                {% endfor %}
+            </ul>
+            {% endif %} {% csrf_token %} {{ login_form.as_p }}
+            <button type="submit" class="btn btn-default">Login</button>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <a id="register_btn" href="#">Register</a>
+        </form>
+    </div>
+
+    <div id="registerform" class="anime_object form-group">
+        <h4 class="text-muted">Register</h4>
+        <form method="POST" action="/register/" class="form">
+            {% csrf_token %} {{ register_form.as_p }}
+            <a id="back_btn" href="#" class="btn">Back</a>
+            <button type="submit" class="btn btn-default">Register</button>
+        </form>
+    </div>
+    {% endif %}
+ {% endblock content %}
